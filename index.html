@@ -51,6 +51,10 @@
         .neon-text-green {
             text-shadow: 0 0 5px rgba(0, 255, 0, 0.7), 0 0 10px rgba(0, 255, 0, 0.5);
         }
+
+        .neon-text-yellow {
+            text-shadow: 0 0 5px rgba(255, 255, 0, 0.7), 0 0 10px rgba(255, 255, 0, 0.5);
+        }
         
         .neon-border-cyan {
             border-color: #0ff;
@@ -124,11 +128,21 @@
                 
                 <!-- Navigation Tabs (Sidebar) -->
                 <nav class="col-span-12 lg:col-span-3">
-                    <h2 class="text-lg font-semibold text-cyan-400 mb-4">TOOLS</h2>
+                    <h2 class="text-lg font-semibold text-cyan-400 mb-4">INTELLIGENCE FEEDS</h2>
                     <ul id="sidebar-nav" class="space-y-2 mb-6">
                         <li>
                             <button data-page="crypto" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
                                 💠 Crypto Tracker
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="cyber-attacks" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🎯 Cyberattack Tracker
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="cyber-news" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🛡️ Cyber News Feed
                             </button>
                         </li>
                     </ul>
@@ -235,14 +249,53 @@
                             <!-- Live TX Feed -->
                             <div id="crypto-feed-container" class="flex-grow overflow-y-auto p-4 flex flex-col-reverse space-y-4 space-y-reverse">
                                 <!-- Mock TX Template -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cyber Attack Tracker Wrapper (Hidden by default) -->
+                    <div id="cyber-attack-wrapper" class="hidden bg-black/30 backdrop-blur-sm border-2 neon-border-cyan rounded-xl shadow-2xl">
+                        <!-- Attack Header -->
+                        <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                            <h2 id="cyber-attack-title" class="text-2xl font-bold neon-text-cyan">🎯 CYBERATTACK TRACKER</h2>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <span class="text-cyan-300">LIVE ATTACK FEED</span>
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Attack Content -->
+                        <div class="h-[70vh] flex flex-col">
+                            <!-- Top Monitored Threats -->
+                            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-cyan-800/50">
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-red-400 text-sm mb-1">APT_Nocturne (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Activity: High. Targeting EU energy sector. Type: Phishing, Zero-Day Exploit.</p>
+                                </div>
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-yellow-400 text-sm mb-1">Lockbit_3.0_RaaS (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Activity: Medium. Targeting US healthcare. Type: Ransomware.</p>
+                                </div>
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-red-400 text-sm mb-1">Global_DDoS_Botnet (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Activity: High. Targeting financial services (Asia). Type: DDoS (750Gbps).</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Live Attack Feed -->
+                            <div id="cyber-attack-container" class="flex-grow overflow-y-auto p-4 flex flex-col-reverse space-y-4 space-y-reverse">
+                                <!-- Mock Attack Template -->
                                 <!-- 
                                 <article class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50 news-article-animation">
                                     <div class="flex justify-between items-center text-sm">
-                                        <span class="font-medium text-cyan-300">Rep_Crypto_Fund</span>
-                                        <span class="font-bold text-green-400 neon-text-green">BUY</span>
+                                        <span class="font-bold text-red-400 neon-text-red">DDoS</span>
+                                        <span class="font-medium text-cyan-300">TARGET: US Gov Server</span>
                                     </div>
                                     <div class="flex justify-between items-center text-xs mt-1">
-                                        <span class="text-gray-300"><strong>50.0 ETH</strong> ($150,000.00 USD)</span>
+                                        <span class="text-gray-300">SOURCE: 185.12.33.0/24 (Botnet)</span>
                                         <span class="text-gray-400">2025-11-16T16:30:00 EST</span>
                                     </div>
                                 </article>
@@ -250,6 +303,26 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Cyber News Wrapper (Hidden by default) -->
+                    <div id="cyber-news-wrapper" class="hidden bg-black/30 backdrop-blur-sm border-2 neon-border-cyan rounded-xl shadow-2xl">
+                        <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                            <h2 id="cyber-news-title" class="text-2xl font-bold neon-text-cyan">🛡️ CYBER NEWS FEED</h2>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <span class="text-cyan-300">LIVE FEED</span>
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cyber News articles will be injected here -->
+                        <div id="cyber-news-container" class="h-[70vh] overflow-y-auto p-4 flex flex-col-reverse space-y-4 space-y-reverse">
+                            <!-- Mock Cyber News Article Template -->
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -366,6 +439,12 @@
             
             const cryptoTrackerWrapper = document.getElementById('crypto-tracker-wrapper');
             const cryptoFeedContainer = document.getElementById('crypto-feed-container');
+
+            const cyberAttackWrapper = document.getElementById('cyber-attack-wrapper');
+            const cyberAttackContainer = document.getElementById('cyber-attack-container');
+
+            const cyberNewsWrapper = document.getElementById('cyber-news-wrapper');
+            const cyberNewsContainer = document.getElementById('cyber-news-container');
             
             // Modal Elements
             const newsModal = document.getElementById('news-modal');
@@ -375,10 +454,14 @@
 
             let allNews = [];
             let allCryptoTx = [];
-            let currentRegion = 'All'; // 'All' or region name, or 'crypto'
+            let allCyberAttacks = [];
+            let allCyberNews = [];
+            let currentRegion = 'All'; // 'All', region name, 'crypto', 'cyber-attacks', 'cyber-news'
             
             let mockNewsInterval;
             let mockCryptoInterval;
+            let mockAttackInterval;
+            let mockCyberNewsInterval;
 
             const regions = [
                 { name: 'United States', emoji: '🇺🇸' },
@@ -417,6 +500,31 @@
                 ]
             };
 
+            const mockAttacks = {
+                types: [
+                    { name: 'DDoS', class: 'text-red-400 neon-text-red' },
+                    { name: 'Ransomware', class: 'text-yellow-400 neon-text-yellow' },
+                    { name: 'Phishing', class: 'text-cyan-400' },
+                    { name: 'Zero-Day Exploit', class: 'text-red-400 neon-text-red' }
+                ],
+                sources: ['185.12.33.0/24 (Botnet)', 'APT_Nocturne', 'Lockbit_3.0_RaaS', 'Unknown (TOR Exit)'],
+                targets: ['US Gov Server', 'EU Energy Grid', 'JP Financials', 'UK Healthcare', 'AUS Logistics']
+            };
+
+            const mockCyberNews = {
+                headlines: [
+                    "CISA Issues Alert on New", "Hacking Group 'Nocturne' Claims Responsibility for",
+                    "Major Tech Firm Patches Critical", "Government Agencies Warn of Increased",
+                    "New Ransomware Strain 'Lockbit 4.0' Detected in"
+                ],
+                subjects: [
+                    "Zero-Day Vulnerability in Web Servers.", "EU Energy Grid Disruption.",
+                    "Cloud Infrastructure Flaw.", "State-Sponsored Phishing Campaigns.",
+                    "Wild Targeting Healthcare."
+                ]
+            };
+
+
             // --- Mock Backend Simulation ---
             const mockBackend = {
                 generateMockNews: () => {
@@ -438,9 +546,7 @@
                         timestamp: new Date().toISOString()
                     };
                     
-                    // Add to "database"
                     allNews.push(newArticle);
-                    // Update UI only if the correct page is active
                     if (currentRegion === 'All' || currentRegion === newArticle.region) {
                         addArticleToDOM(newArticle);
                     }
@@ -464,11 +570,51 @@
                     };
 
                     allCryptoTx.push(newTx);
-                    // Update UI only if the correct page is active
                     if (currentRegion === 'crypto') {
                         addCryptoTxToDOM(newTx);
                     }
                 },
+
+                generateMockCyberAttack: () => {
+                    const type = mockAttacks.types[Math.floor(Math.random() * mockAttacks.types.length)];
+                    const source = mockAttacks.sources[Math.floor(Math.random() * mockAttacks.sources.length)];
+                    const target = mockAttacks.targets[Math.floor(Math.random() * mockAttacks.targets.length)];
+
+                    const newAttack = {
+                        id: Date.now(),
+                        type: type,
+                        source: source,
+                        target: target,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    allCyberAttacks.push(newAttack);
+                    if (currentRegion === 'cyber-attacks') {
+                        addCyberAttackToDOM(newAttack);
+                    }
+                },
+
+                generateMockCyberNews: () => {
+                    const headline = mockCyberNews.headlines[Math.floor(Math.random() * mockCyberNews.headlines.length)];
+                    const subject = mockCyberNews.subjects[Math.floor(Math.random() * mockCyberNews.subjects.length)];
+                    const title = `${headline} ${subject}`;
+                    const summary = `(OLLAMA MOCK SUMMARY) - Cybersecurity analysts are tracking a new development: ${subject} This poses a significant threat to global digital infrastructure. Security firms are urging immediate patching and heightened vigilance.`;
+                    const detailedSummary = `(OLLAMA MOCK DETAILED SUMMARY) - ${summary} The vulnerability, now tracked as CVE-2025-99999, is a remote code execution (RCE) flaw in a widely used enterprise web server. The hacking group 'APT_Nocturne' has been observed exploiting this flaw in the wild, targeting the EU energy sector. CISA, in conjunction with international partners, has released an emergency directive. All organizations using the affected software are advised to apply patches immediately or take mitigation steps if patching is not possible. This is considered a critical threat with a CVSS score of 9.8.`;
+
+                    const newCyberArticle = {
+                        id: Date.now(),
+                        title: title,
+                        summary: summary,
+                        detailedSummary: detailedSummary,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    allCyberNews.push(newCyberArticle);
+                    if (currentRegion === 'cyber-news') {
+                        addCyberNewsToDOM(newCyberArticle);
+                    }
+                },
+
 
                 startNewsFeed: () => {
                     if (mockNewsInterval) clearInterval(mockNewsInterval);
@@ -478,6 +624,16 @@
                 startCryptoFeed: () => {
                     if (mockCryptoInterval) clearInterval(mockCryptoInterval);
                     mockCryptoInterval = setInterval(mockBackend.generateMockCryptoTx, 2500);
+                },
+
+                startAttackFeed: () => {
+                    if (mockAttackInterval) clearInterval(mockAttackInterval);
+                    mockAttackInterval = setInterval(mockBackend.generateMockCyberAttack, 2000);
+                },
+
+                startCyberNewsFeed: () => {
+                    if (mockCyberNewsInterval) clearInterval(mockCyberNewsInterval);
+                    mockCyberNewsInterval = setInterval(mockBackend.generateMockCyberNews, 3500);
                 }
             };
 
@@ -486,6 +642,7 @@
                 const articleElement = document.createElement('article');
                 articleElement.className = 'bg-cyan-900/30 p-4 rounded-lg border border-cyan-700/50 shadow-lg news-article-animation cursor-pointer transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-900/50';
                 articleElement.setAttribute('data-id', article.id);
+                articleElement.setAttribute('data-type', 'political-news');
                 
                 articleElement.innerHTML = `
                     <h3 class="text-xl font-semibold text-cyan-300 mb-2">${article.title}</h3>
@@ -517,6 +674,42 @@
                 cryptoFeedContainer.appendChild(txElement);
             }
 
+            function addCyberAttackToDOM(attack) {
+                const attackElement = document.createElement('article');
+                attackElement.className = 'bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50 news-article-animation';
+                
+                attackElement.innerHTML = `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-bold ${attack.type.class}">${attack.type.name}</span>
+                        <span class="font-medium text-cyan-300">TARGET: ${attack.target}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs mt-1">
+                        <span class="text-gray-300">SOURCE: ${attack.source}</span>
+                        <span class="text-gray-400">${new Date(attack.timestamp).toLocaleString()}</span>
+                    </div>
+                `;
+                
+                cyberAttackContainer.appendChild(attackElement);
+            }
+
+            function addCyberNewsToDOM(article) {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'bg-cyan-900/30 p-4 rounded-lg border border-cyan-700/50 shadow-lg news-article-animation cursor-pointer transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-900/50';
+                articleElement.setAttribute('data-id', article.id);
+                articleElement.setAttribute('data-type', 'cyber-news');
+                
+                articleElement.innerHTML = `
+                    <h3 class="text-xl font-semibold text-cyan-300 mb-2">${article.title}</h3>
+                    <p class="text-gray-300 text-sm mb-3">${article.summary}</p>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-medium text-yellow-400">CYBER INTEL</span>
+                        <span class="text-gray-400">${new Date(article.timestamp).toLocaleString()}</span>
+                    </div>
+                `;
+                
+                cyberNewsContainer.appendChild(articleElement);
+            }
+
             function renderFullFeed() {
                 feedContainer.innerHTML = ''; // Clear the feed
                 
@@ -530,24 +723,39 @@
                     emoji = '📡';
                 } else {
                     const regionObj = regions.find(r => r.name === currentRegion);
-                    if (!regionObj) return; // Should not happen if page is 'news'
+                    if (!regionObj) return; 
                     filteredNews = allNews.filter(article => article.region === currentRegion);
                     title = regionObj.name;
                     emoji = regionObj.emoji;
                 }
 
                 feedTitle.innerHTML = `${emoji} ${title}`;
-                
-                // Add articles in reverse chronological order
                 filteredNews.slice().reverse().forEach(addArticleToDOM);
             }
 
             function renderFullCryptoFeed() {
-                cryptoFeedContainer.innerHTML = ''; // Clear the feed
+                cryptoFeedContainer.innerHTML = '';
                 allCryptoTx.slice().reverse().forEach(addCryptoTxToDOM);
             }
 
-// --- Page & Tab Switching Logic ---
+            function renderFullCyberAttackFeed() {
+                cyberAttackContainer.innerHTML = '';
+                allCyberAttacks.slice().reverse().forEach(addCyberAttackToDOM);
+            }
+
+            function renderFullCyberNewsFeed() {
+                cyberNewsContainer.innerHTML = '';
+                allCyberNews.slice().reverse().forEach(addCyberNewsToDOM);
+            }
+
+            function hideAllWrappers() {
+                newsFeedWrapper.classList.add('hidden');
+                cryptoTrackerWrapper.classList.add('hidden');
+                cyberAttackWrapper.classList.add('hidden');
+                cyberNewsWrapper.classList.add('hidden');
+            }
+
+            // --- Page & Tab Switching Logic ---
             function handleSidebarClick(e) {
                 const button = e.target.closest('button');
                 if (!button) return;
@@ -561,16 +769,29 @@
                 });
                 button.classList.add('tab-active');
 
-                if (page === 'crypto') {
-                    currentRegion = 'crypto';
-                    newsFeedWrapper.classList.add('hidden');
-                    cryptoTrackerWrapper.classList.remove('hidden');
-                    renderFullCryptoFeed(); // Render existing txs
-                } else if (page === 'news') {
-                    currentRegion = region;
-                    newsFeedWrapper.classList.remove('hidden');
-                    cryptoTrackerWrapper.classList.add('hidden');
-                    renderFullFeed(); // Render news for the selected region
+                hideAllWrappers();
+
+                switch (page) {
+                    case 'crypto':
+                        currentRegion = 'crypto';
+                        cryptoTrackerWrapper.classList.remove('hidden');
+                        renderFullCryptoFeed();
+                        break;
+                    case 'cyber-attacks':
+                        currentRegion = 'cyber-attacks';
+                        cyberAttackWrapper.classList.remove('hidden');
+                        renderFullCyberAttackFeed();
+                        break;
+                    case 'cyber-news':
+                        currentRegion = 'cyber-news';
+                        cyberNewsWrapper.classList.remove('hidden');
+                        renderFullCyberNewsFeed();
+                        break;
+                    case 'news':
+                        currentRegion = region;
+                        newsFeedWrapper.classList.remove('hidden');
+                        renderFullFeed();
+                        break;
                 }
             }
 
@@ -591,16 +812,26 @@
             sidebarNav.addEventListener('click', handleSidebarClick);
             regionTabs.addEventListener('click', handleSidebarClick);
             
-            // Event delegation for opening NEWS modal
-            feedContainer.addEventListener('click', (e) => {
+            function handleArticleClick(e, sourceArray) {
                 const articleElement = e.target.closest('article');
                 if (!articleElement) return;
                 
                 const articleId = articleElement.getAttribute('data-id');
-                const articleData = allNews.find(item => item.id == articleId);
+                const articleData = sourceArray.find(item => item.id == articleId);
                 
                 openModal(articleData);
+            }
+
+            // Event delegation for opening POLITICAL NEWS modal
+            feedContainer.addEventListener('click', (e) => {
+                handleArticleClick(e, allNews);
             });
+
+            // Event delegation for opening CYBER NEWS modal
+            cyberNewsContainer.addEventListener('click', (e) => {
+                handleArticleClick(e, allCyberNews);
+            });
+
 
             // Close modal listeners
             modalCloseBtn.addEventListener('click', closeModal);
@@ -614,6 +845,8 @@
             // --- Initialization ---
             mockBackend.startNewsFeed();
             mockBackend.startCryptoFeed();
+            mockBackend.startAttackFeed();
+            mockBackend.startCyberNewsFeed();
         });
     </script>
 </body>
