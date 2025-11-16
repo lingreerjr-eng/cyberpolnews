@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERPOL | Global Political Feed</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js for 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Inter Font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050a15;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas Styling */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Main content must be on top of the canvas */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Neon / Glow Effects */
+        .neon-text-cyan {
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7), 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .neon-text-red {
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.7), 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .neon-text-green {
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.7), 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .neon-border-cyan {
+            border-color: #0ff;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5), inset 0 0 8px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Active Tab Styling */
+        .tab-active {
+            background-color: rgba(0, 255, 255, 0.1);
+            border-bottom-color: #0ff;
+            color: #0ff;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+        }
+
+        /* News Article Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .news-article-animation {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050a15;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0ff;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0cc;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Content Wrapper -->
+    <div class="content-wrapper min-h-screen flex flex-col">
+
+        <!-- Header -->
+        <header class="bg-black/30 backdrop-blur-md border-b border-cyan-500/30 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-wider neon-text-cyan">CYBERPOL</h1>
+                        <p class="text-sm text-cyan-300 opacity-80">The Future of Political Intelligence</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-12 gap-8">
+                
+                <!-- Navigation Tabs (Sidebar) -->
+                <nav class="col-span-12 lg:col-span-3">
+                    <h2 class="text-lg font-semibold text-cyan-400 mb-4">TOOLS</h2>
+                    <ul id="sidebar-nav" class="space-y-2 mb-6">
+                        <li>
+                            <button data-page="crypto" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                💠 Crypto Tracker
+                            </button>
+                        </li>
+                    </ul>
+
+                    <h2 class="text-lg font-semibold text-cyan-400 mb-4">REGIONAL FEEDS</h2>
+                    <ul id="region-tabs" class="space-y-2">
+                        <li>
+                            <button data-page="news" data-region="All" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all tab-active">
+                                📡 Global Feed
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="United States" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🇺🇸 United States
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="Europe" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🇪🇺 Europe
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="Asia" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🌏 Asia
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="Middle East" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🕌 Middle East
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="Africa" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🌍 Africa
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="South America" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🌎 South America
+                            </button>
+                        </li>
+                        <li>
+                            <button data-page="news" data-region="Oceania" class="w-full text-left px-4 py-3 rounded-lg border-2 border-transparent font-medium hover:bg-cyan-900/50 hover:border-cyan-700 transition-all">
+                                🇦🇺 Oceania
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Main Content Area -->
+                <div class="col-span-12 lg:col-span-9">
+
+                    <!-- News Feed Wrapper -->
+                    <div id="news-feed-wrapper" class="bg-black/30 backdrop-blur-sm border-2 neon-border-cyan rounded-xl shadow-2xl">
+                        <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                            <h2 id="feed-title" class="text-2xl font-bold neon-text-cyan">📡 Global Feed</h2>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <span class="text-cyan-300">LIVE FEED</span>
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- News articles will be injected here -->
+                        <div id="news-feed-container" class="h-[70vh] overflow-y-auto p-4 flex flex-col-reverse space-y-4 space-y-reverse">
+                            <!-- Mock Article Template -->
+                        </div>
+                    </div>
+
+                    <!-- Crypto Tracker Wrapper (Hidden by default) -->
+                    <div id="crypto-tracker-wrapper" class="hidden bg-black/30 backdrop-blur-sm border-2 neon-border-cyan rounded-xl shadow-2xl">
+                        <!-- Crypto Header -->
+                        <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                            <h2 id="crypto-feed-title" class="text-2xl font-bold neon-text-cyan">💠 POLI-CRYPTO TRACKER</h2>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <span class="text-cyan-300">LIVE TX FEED</span>
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Crypto Content -->
+                        <div class="h-[70vh] flex flex-col">
+                            <!-- Notable Wallets -->
+                            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-cyan-800/50">
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-cyan-300 text-sm mb-1">Rep_Crypto_Fund (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Summary: 7-day activity shows <strong>+150 ETH</strong> & <strong>-2.5M USDC</strong>. High velocity.</p>
+                                </div>
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-cyan-300 text-sm mb-1">Senator_Lummis_Vault (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Summary: 30-day activity: <strong>+5 BTC</strong>. No sells detected. Low velocity (HODL).</p>
+                                </div>
+                                <div class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50">
+                                    <h3 class="font-semibold text-cyan-300 text-sm mb-1">PAC_Digital_Assets (MOCK)</h3>
+                                    <p class="text-xs text-gray-400">Summary: High volume in alt-coins (<strong>SOL, AVAX</strong>). Staking <strong>+5M USDC</strong>.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Live TX Feed -->
+                            <div id="crypto-feed-container" class="flex-grow overflow-y-auto p-4 flex flex-col-reverse space-y-4 space-y-reverse">
+                                <!-- Mock TX Template -->
+                                <!-- 
+                                <article class="bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50 news-article-animation">
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="font-medium text-cyan-300">Rep_Crypto_Fund</span>
+                                        <span class="font-bold text-green-400 neon-text-green">BUY</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-xs mt-1">
+                                        <span class="text-gray-300"><strong>50.0 ETH</strong> ($150,000.00 USD)</span>
+                                        <span class="text-gray-400">2025-11-16T16:30:00 EST</span>
+                                    </div>
+                                </article>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-black/30 backdrop-blur-md border-t border-cyan-500/30 mt-12 py-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2025 CYBERPOL. All rights reserved. Data feed is a MOCK simulation.</p>
+                <p>This UI simulation is not connected to a live database or the Ollama API.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- News Detail Modal -->
+    <div id="news-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-gray-900 border-2 neon-border-cyan rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                <h2 id="modal-title" class="text-2xl font-bold neon-text-cyan">Article Title</h2>
+                <button id="modal-close-btn" class="text-cyan-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto">
+                <p id="modal-summary" class="text-gray-300 text-base leading-relaxed">Detailed summary goes here...</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 3D Background Script -->
+    <script type_ ="module">
+        let camera, scene, renderer, particles, geometry, material, group;
+
+        function init() {
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.z = 1000;
+            scene = new THREE.Scene();
+
+            geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const particleCount = 5000;
+
+            for (let i = 0; i < particleCount; i++) {
+                const x = (Math.random() - 0.5) * 2000;
+                const y = (Math.random() - 0.5) * 2000;
+                const z = (Math.random() - 0.5) * 2000;
+                vertices.push(x, y, z);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+            material = new THREE.PointsMaterial({
+                color: 0x00ffff,
+                size: 1.5,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add a rotating wireframe globe
+            const globeGeometry = new THREE.IcosahedronGeometry(150, 3);
+            const globeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true, transparent: true, opacity: 0.3 });
+            const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+
+            group = new THREE.Group();
+            group.add(globe);
+            scene.add(group);
+
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.0001;
+            particles.rotation.x = time * 0.25;
+            particles.rotation.y = time * 0.5;
+            group.rotation.y = time * 0.3;
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+        window.addEventListener('resize', onWindowResize);
+    </script>
+
+    <!-- App Logic Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const regionTabs = document.getElementById('region-tabs');
+            
+            const newsFeedWrapper = document.getElementById('news-feed-wrapper');
+            const feedContainer = document.getElementById('news-feed-container');
+            const feedTitle = document.getElementById('feed-title');
+            
+            const cryptoTrackerWrapper = document.getElementById('crypto-tracker-wrapper');
+            const cryptoFeedContainer = document.getElementById('crypto-feed-container');
+            
+            // Modal Elements
+            const newsModal = document.getElementById('news-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSummary = document.getElementById('modal-summary');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
+            let allNews = [];
+            let allCryptoTx = [];
+            let currentRegion = 'All'; // 'All' or region name, or 'crypto'
+            
+            let mockNewsInterval;
+            let mockCryptoInterval;
+
+            const regions = [
+                { name: 'United States', emoji: '🇺🇸' },
+                { name: 'Europe', emoji: '🇪🇺' },
+                { name: 'Asia', emoji: '🌏' },
+                { name: 'Middle East', emoji: '🕌' },
+                { name: 'Africa', emoji: '🌍' },
+                { name: 'South America', emoji: '🌎' },
+                { name: 'Oceania', emoji: '🇦🇺' }
+            ];
+
+            const mockHeadlines = [
+                "New Diplomatic Talks Scheduled Between", "Economic Policy Shift Announced in", "Major Infrastructure Project Greenlit for",
+                "Election Results Certified in", "New Trade Alliance Formed by", "Tech Innovation Summit Held in",
+                "Environmental Accord Reached by", "Security Posture Increased in", "Cultural Festival Celebrates Heritage in"
+            ];
+            
+            const mockSubjects = [
+                "key economic partners.", "a developing nation.", "major G7 power.", "emerging market.",
+                "disputed territory.", "key trade route.", "strategic border region.", "densely populated area."
+            ];
+
+            const mockCrypto = {
+                wallets: ['Rep_Crypto_Fund', 'Senator_Lummis_Vault', 'PAC_Digital_Assets'],
+                actions: [
+                    { name: 'BUY', class: 'text-green-400 neon-text-green' }, 
+                    { name: 'SELL', class: 'text-red-400 neon-text-red' },
+                    { name: 'STAKE', class: 'text-cyan-400' },
+                    { name: 'MOVE', class: 'text-yellow-400' }
+                ],
+                assets: [
+                    { name: 'BTC', price: 60000 },
+                    { name: 'ETH', price: 3000 },
+                    { name: 'SOL', price: 150 },
+                    { name: 'USDC', price: 1 }
+                ]
+            };
+
+            // --- Mock Backend Simulation ---
+            const mockBackend = {
+                generateMockNews: () => {
+                    const region = regions[Math.floor(Math.random() * regions.length)];
+                    const headline = mockHeadlines[Math.floor(Math.random() * mockHeadlines.length)];
+                    const subject = mockSubjects[Math.floor(Math.random() * mockSubjects.length)];
+                    
+                    const title = `${headline} ${region.name}`;
+                    const summary = `(OLLAMA MOCK SUMMARY) - Sources report on a developing situation in ${region.name} concerning ${subject} This new development could have significant implications for regional stability and international trade agreements. Analysts are closely monitoring the situation as it unfolds.`;
+                    const detailedSummary = `(OLLAMA MOCK DETAILED SUMMARY) - ${summary} This report, corroborated by three independent sources, suggests a significant shift in foreign policy. Analysts at the Global Cyberpolitical Institute (GCI) predict this will lead to a 5-7% fluctuation in regional markets within the next 48 hours. The move is seen as a direct response to last week's trade negotiations, which reportedly stalled over data sovereignty disputes. A spokesperson for the ministry is expected to deliver a formal statement by 18:00 GMT. Additional unconfirmed reports indicate that diplomatic channels are actively working to de-escalate potential trade conflicts.`;
+                    
+                    const newArticle = {
+                        id: Date.now(),
+                        title: title,
+                        summary: summary,
+                        detailedSummary: detailedSummary,
+                        region: region.name,
+                        emoji: region.emoji,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Add to "database"
+                    allNews.push(newArticle);
+                    // Update UI only if the correct page is active
+                    if (currentRegion === 'All' || currentRegion === newArticle.region) {
+                        addArticleToDOM(newArticle);
+                    }
+                },
+
+                generateMockCryptoTx: () => {
+                    const wallet = mockCrypto.wallets[Math.floor(Math.random() * mockCrypto.wallets.length)];
+                    const action = mockCrypto.actions[Math.floor(Math.random() * mockCrypto.actions.length)];
+                    const asset = mockCrypto.assets[Math.floor(Math.random() * mockCrypto.assets.length)];
+                    const amount = (Math.random() * (asset.name === 'BTC' ? 10 : 1000)).toFixed(asset.name === 'USDC' ? 0 : 2);
+                    const value = (amount * asset.price).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+                    const newTx = {
+                        id: Date.now(),
+                        wallet: wallet,
+                        action: action,
+                        asset: asset.name,
+                        amount: amount,
+                        value: value,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    allCryptoTx.push(newTx);
+                    // Update UI only if the correct page is active
+                    if (currentRegion === 'crypto') {
+                        addCryptoTxToDOM(newTx);
+                    }
+                },
+
+                startNewsFeed: () => {
+                    if (mockNewsInterval) clearInterval(mockNewsInterval);
+                    mockNewsInterval = setInterval(mockBackend.generateMockNews, 3000);
+                },
+
+                startCryptoFeed: () => {
+                    if (mockCryptoInterval) clearInterval(mockCryptoInterval);
+                    mockCryptoInterval = setInterval(mockBackend.generateMockCryptoTx, 2500);
+                }
+            };
+
+            // --- UI Functions ---
+            function addArticleToDOM(article) {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'bg-cyan-900/30 p-4 rounded-lg border border-cyan-700/50 shadow-lg news-article-animation cursor-pointer transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-900/50';
+                articleElement.setAttribute('data-id', article.id);
+                
+                articleElement.innerHTML = `
+                    <h3 class="text-xl font-semibold text-cyan-300 mb-2">${article.title}</h3>
+                    <p class="text-gray-300 text-sm mb-3">${article.summary}</p>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-medium text-cyan-400">REGION: ${article.emoji} ${article.region}</span>
+                        <span class="text-gray-400">${new Date(article.timestamp).toLocaleString()}</span>
+                    </div>
+                `;
+                
+                feedContainer.appendChild(articleElement);
+            }
+
+            function addCryptoTxToDOM(tx) {
+                const txElement = document.createElement('article');
+                txElement.className = 'bg-cyan-900/30 p-3 rounded-lg border border-cyan-700/50 news-article-animation';
+                
+                txElement.innerHTML = `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-medium text-cyan-300">${tx.wallet}</span>
+                        <span class="font-bold ${tx.action.class}">${tx.action.name}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs mt-1">
+                        <span class="text-gray-300"><strong>${tx.amount} ${tx.asset}</strong> (${tx.value})</span>
+                        <span class="text-gray-400">${new Date(tx.timestamp).toLocaleString()}</span>
+                    </div>
+                `;
+                
+                cryptoFeedContainer.appendChild(txElement);
+            }
+
+            function renderFullFeed() {
+                feedContainer.innerHTML = ''; // Clear the feed
+                
+                let filteredNews;
+                let title;
+                let emoji;
+
+                if (currentRegion === 'All') {
+                    filteredNews = allNews;
+                    title = 'Global Feed';
+                    emoji = '📡';
+                } else {
+                    const regionObj = regions.find(r => r.name === currentRegion);
+                    if (!regionObj) return; // Should not happen if page is 'news'
+                    filteredNews = allNews.filter(article => article.region === currentRegion);
+                    title = regionObj.name;
+                    emoji = regionObj.emoji;
+                }
+
+                feedTitle.innerHTML = `${emoji} ${title}`;
+                
+                // Add articles in reverse chronological order
+                filteredNews.slice().reverse().forEach(addArticleToDOM);
+            }
+
+            function renderFullCryptoFeed() {
+                cryptoFeedContainer.innerHTML = ''; // Clear the feed
+                allCryptoTx.slice().reverse().forEach(addCryptoTxToDOM);
+            }
+
+// --- Page & Tab Switching Logic ---
+            function handleSidebarClick(e) {
+                const button = e.target.closest('button');
+                if (!button) return;
+
+                const page = button.dataset.page;
+                const region = button.dataset.region;
+
+                // Update active tab style
+                document.querySelectorAll('#sidebar-nav button, #region-tabs button').forEach(btn => {
+                    btn.classList.remove('tab-active');
+                });
+                button.classList.add('tab-active');
+
+                if (page === 'crypto') {
+                    currentRegion = 'crypto';
+                    newsFeedWrapper.classList.add('hidden');
+                    cryptoTrackerWrapper.classList.remove('hidden');
+                    renderFullCryptoFeed(); // Render existing txs
+                } else if (page === 'news') {
+                    currentRegion = region;
+                    newsFeedWrapper.classList.remove('hidden');
+                    cryptoTrackerWrapper.classList.add('hidden');
+                    renderFullFeed(); // Render news for the selected region
+                }
+            }
+
+
+            // --- Modal Open/Close Logic ---
+            function openModal(article) {
+                if (!article) return;
+                modalTitle.textContent = article.title;
+                modalSummary.textContent = article.detailedSummary;
+                newsModal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                newsModal.classList.add('hidden');
+            }
+
+            // --- Event Listeners ---
+            sidebarNav.addEventListener('click', handleSidebarClick);
+            regionTabs.addEventListener('click', handleSidebarClick);
+            
+            // Event delegation for opening NEWS modal
+            feedContainer.addEventListener('click', (e) => {
+                const articleElement = e.target.closest('article');
+                if (!articleElement) return;
+                
+                const articleId = articleElement.getAttribute('data-id');
+                const articleData = allNews.find(item => item.id == articleId);
+                
+                openModal(articleData);
+            });
+
+            // Close modal listeners
+            modalCloseBtn.addEventListener('click', closeModal);
+            newsModal.addEventListener('click', (e) => {
+                if (e.target === newsModal) {
+                    closeModal();
+                }
+            });
+
+
+            // --- Initialization ---
+            mockBackend.startNewsFeed();
+            mockBackend.startCryptoFeed();
+        });
+    </script>
+</body>
+</html>
